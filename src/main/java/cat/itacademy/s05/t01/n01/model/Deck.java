@@ -1,7 +1,6 @@
 package cat.itacademy.s05.t01.n01.model;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Deck {
 
@@ -37,6 +36,17 @@ public class Deck {
 
     public int getDeckSize(){
         return this.deck.size();
+    }
+
+    public void shuffleDeck() {
+        List<Integer> listOfCards = new ArrayList<>();
+
+        int i;
+        for (i = 1; i<49; i++) {
+            listOfCards.add(i);
+        }
+
+        Collections.shuffle(listOfCards);
     }
 
     public void putCardInDeck(int key, Card card) {
