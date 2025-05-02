@@ -12,16 +12,34 @@ class DeckTest {
 
     @Test
     void getDeckSize() {
+        newDeck.populateDeck();
+        for (Integer j : newDeck.getDeckMap().keySet()) {
+            System.out.println("key: " + j + " value: " + newDeck.getDeckMap().get(j).getName() + " of " + newDeck.getDeckMap().get(j).getSuit());
+        }
         Assertions.assertEquals(48, newDeck.getDeckSize());
+
+
     }
 
     @Test
     void getCardNameFromDeck() {
+        newDeck.populateDeck();
         Assertions.assertEquals("ACE", newDeck.getDeckMap().get(1).getName());
     }
 
     @Test
     void getCardSuitFromDeck() {
+        newDeck.populateDeck();
         Assertions.assertEquals("HEARTS",newDeck.getDeckMap().get(1).getSuit());
+    }
+
+    @Test
+    void getShuffledDeck() {
+        newDeck.populateDeck();
+        newDeck = newDeck.shuffleDeck();
+
+        for (Integer j : newDeck.getDeckMap().keySet()) {
+            System.out.println("key: " + j + " value: " + newDeck.getDeckMap().get(j).getName() + " of " + newDeck.getDeckMap().get(j).getSuit());
+        }
     }
 }

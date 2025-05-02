@@ -4,10 +4,13 @@ import java.util.*;
 
 public class Deck {
 
-    private Map<Integer,Card> deck;
+    private Map<Integer,Card> deck = new HashMap<>();
 
     public Deck() {
-        this.deck = new HashMap<>();
+
+    }
+
+    public void populateDeck() {
         int i=1;
         for (CardNumber cardNumber : CardNumber.values()) {
             this.deck.put(i,new Card((String) cardNumber.name(),(String) CardSuit.HEARTS.name()));
@@ -27,7 +30,8 @@ public class Deck {
         for (CardNumber cardNumber : CardNumber.values()) {
             this.deck.put(i,new Card(cardNumber.name(),CardSuit.SPADES.name()));
             i++;
-        }
+    }
+
 
 //        for (Integer j : deck.keySet()) {
 //            System.out.println("key: " + j + " value: " + deck.get(j).getName() + " of " + deck.get(j).getSuit());
@@ -38,7 +42,7 @@ public class Deck {
         return this.deck.size();
     }
 
-    public void shuffleDeck() {
+    public Deck shuffleDeck() {
         List<Integer> listOfCards = new ArrayList<>();
 
         int i;
@@ -47,6 +51,18 @@ public class Deck {
         }
 
         Collections.shuffle(listOfCards);
+
+        this.populateDeck();
+        Deck shuffledDeck = new Deck();
+
+        i = 1;
+        for (int key : listOfCards ) {
+            shuffledDeck.putCardInDeck(i,this.getDeckMap().get(key));
+            i++;
+        }
+
+        return shuffledDeck;
+
     }
 
     public void putCardInDeck(int key, Card card) {
@@ -57,8 +73,8 @@ public class Deck {
         return this.deck;
     }
 
-    public void removeCardFromDeck(Integer key){
-
+    public Integer removeCardFromDeck(Integer key){
+        return null;
     }
 
 }
