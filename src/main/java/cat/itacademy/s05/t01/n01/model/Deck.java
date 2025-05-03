@@ -57,7 +57,7 @@ public class Deck {
 
         i = 1;
         for (int key : listOfCards ) {
-            shuffledDeck.putCardInDeck(i,this.getDeckMap().get(key));
+            shuffledDeck.putCardInDeck(i,this.deck.get(key));
             i++;
         }
 
@@ -73,8 +73,8 @@ public class Deck {
         return this.deck;
     }
 
-    public Integer removeCardFromDeck(Integer key){
-        return null;
+    public Card removeCardFromDeck(Integer key){
+        return this.deck.remove(key);
     }
 
 }
