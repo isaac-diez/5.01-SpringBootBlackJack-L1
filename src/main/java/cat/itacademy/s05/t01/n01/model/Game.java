@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 @Entity
 @Table(name="games")
 
-public class Game implements Iterator<Integer> {
+public class Game {
 
     //get player & croupier
     //place player bet
@@ -43,32 +43,15 @@ public class Game implements Iterator<Integer> {
         return bet;
     }
 
-    @Override
-    public boolean hasNext() {
-        return false;
-    }
+    public Card drawCard(Deck shuffledDeck){
 
-    @Override
-    public Integer next() {
-        return 0;
-    }
+        Iterator<Card> iteratorShuffledDeck = shuffledDeck.getDeckMap().values().iterator();
 
-    @Override
-    public void remove() {
-        Iterator.super.remove();
+        if (!iteratorShuffledDeck.hasNext()) {
+            throw new NoSuchElementException();
+        }
+        return shuffledDeck.removeCardFromDeck(1);
     }
-
-    @Override
-    public void forEachRemaining(Consumer<? super Integer> action) {
-        Iterator.super.forEachRemaining(action);
-    }
-
-//    public Card drawCard(){
-//        if (!hasNext()) {
-//            throw new NoSuchElementException();
-//        }
-//        int cardId = this.deck.removeCardFromDeck(0);
-//    }
 
 
 
