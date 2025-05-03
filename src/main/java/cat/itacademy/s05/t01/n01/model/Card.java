@@ -1,13 +1,17 @@
 package cat.itacademy.s05.t01.n01.model;
 
+import java.util.Objects;
+
 public class Card {
 
     private String name;
     private String suit;
+    private int value;
 
     public Card(String name, String suit) {
         this.name = name;
         this.suit = suit;
+        this.value = CardValue.valueOf(name).getValue();
     }
 
     public String getName() {
@@ -26,5 +30,11 @@ public class Card {
         this.suit = suit;
     }
 
+    public int getValue() {
+        return value;
+    }
 
+    public boolean isAce() {
+        return this.name.equals("ACE");
+    }
 }
