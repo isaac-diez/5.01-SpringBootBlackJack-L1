@@ -1,8 +1,17 @@
 package cat.itacademy.s05.t01.n01.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Table;
+import org.springframework.data.annotation.Id;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.Consumer;
+
+@Entity
+@Table(name="games")
 
 public class Game implements Iterator<Integer> {
 
@@ -12,9 +21,13 @@ public class Game implements Iterator<Integer> {
     //draw croupier cards, calculate result
     //calculate game winner
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    String id;
     private Player player;
     private Player croupier;
     private Deck deck;
+    private int bet;
 
     public void game(Player player) {
         this.player = player;
@@ -23,15 +36,11 @@ public class Game implements Iterator<Integer> {
     }
 
     public void gamePreparation() {
-
         this.deck.shuffleDeck();
-
     }
 
-    public Integer getPlayerBet() {
-
-        return null;
-
+    public Integer getPlayerBet(int bet) {
+        return bet;
     }
 
     @Override
