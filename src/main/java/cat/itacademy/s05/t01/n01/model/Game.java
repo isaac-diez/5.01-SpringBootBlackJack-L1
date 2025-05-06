@@ -26,7 +26,7 @@ public class Game {
     String id;
     private Player player;
     private Player croupier;
-    private Deck deck;
+    private Deck deck = new Deck();
     private int bet;
     private Hand playerHand;
     private Hand croupierHand;
@@ -34,27 +34,21 @@ public class Game {
     public Game(Player player) {
         this.player = player;
         this.croupier = new Player("Croupier", PlayerType.CROUPIER);
-        this.deck = new Deck();
+        this.deck = this.deck.shuffleDeck();
         this.playerHand = new Hand(this.player);
         this.croupierHand = new Hand(this.croupier);
     }
 
     public void gameInit() {
-        Deck shuffledDeck = this.deck.shuffleDeck();
 
         //Draw cards for player
-        this.playerHand.addCardtoHand(drawCard(shuffledDeck));
-        shuffledDeck.removeCardFromDeck();
-
-        this.playerHand.addCardtoHand(drawCard(shuffledDeck));
-        shuffledDeck.removeCardFromDeck();
+        this.playerHand.addCardtoHand(drawCard(this.deck));
+        this.playerHand.addCardtoHand(drawCard(this.deck));
 
         //Draw cards for croupier
-        this.croupierHand.addCardtoHand(drawCard(shuffledDeck));
-        shuffledDeck.removeCardFromDeck();
+        this.croupierHand.addCardtoHand(drawCard(this.deck));
+        this.croupierHand.addCardtoHand(drawCard(this.deck));
 
-        this.croupierHand.addCardtoHand(drawCard(shuffledDeck));
-        shuffledDeck.removeCardFromDeck();
     }
 
     public Integer getPlayerBet(int bet) {
@@ -63,7 +57,7 @@ public class Game {
 
     public Card drawCard(Deck shuffledDeck){
 
-        Iterator<Card> iteratorShuffledDeck = shuffledDeck.getDeckMap().values().iterator();
+        Iterator<Card> iteratorShuffledDeck = shuffledDeck.getDeckList().iterator();
 
         if (!iteratorShuffledDeck.hasNext()) {
             throw new NoSuchElementException();
