@@ -13,8 +13,12 @@ public class Hand {
         this.player = player;
     }
 
-    public void addCardtoHand(Card card) {
+    public void addCardToHand(Card card) {
         hand.add(card);
+    }
+
+    public void removeCardFromHand(Card card) {
+        hand.remove(card);
     }
 
     public int getHandValue() {
@@ -32,6 +36,10 @@ public class Hand {
         while (total > 21 && aceCount > 0) {
             total -= 10;
             aceCount--;
+        }
+
+        if (total > 21) {
+            isBust();
         }
 
         return total;

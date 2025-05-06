@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.function.Consumer;
 
 @Entity
 @Table(name="games")
@@ -29,38 +28,86 @@ public class Game {
     private Player player;
     private Player croupier;
     private Deck deck = new Deck();
-    private int bet;
-    private List<Integer> betPool;
+    private int initialBet;
+    private List<Integer> betTotal;
     private Hand playerHand;
     private Hand croupierHand;
+    private PlayerDecision playerDecision;
 
-    public Game(Player player) {
+    public Game(Player player, int initialBet) {
         this.player = player;
         this.croupier = new Player("Croupier", PlayerType.CROUPIER);
         this.deck = this.deck.shuffleDeck();
         this.playerHand = new Hand(this.player);
         this.croupierHand = new Hand(this.croupier);
-        this.betPool = new ArrayList<>();
+        this.initialBet = initialBet;
+        this.betTotal = new ArrayList<>();
     }
 
     public void gameInit() {
 
+        this.setPlayerBet(this.initialBet);
+
         //Draw cards for player
-        this.playerHand.addCardtoHand(drawCard(this.deck));
-        this.playerHand.addCardtoHand(drawCard(this.deck));
+        this.playerHand.addCardToHand(drawCard(this.deck));
+        this.playerHand.addCardToHand(drawCard(this.deck));
 
         //Draw cards for croupier
-        this.croupierHand.addCardtoHand(drawCard(this.deck));
-        this.croupierHand.addCardtoHand(drawCard(this.deck));
+        this.croupierHand.addCardToHand(drawCard(this.deck));
+        this.croupierHand.addCardToHand(drawCard(this.deck));
 
     }
 
-    public Integer getPlayerBet() {
-        return bet;
+    public void gameMainPart(Hand handToPlay) {
+
+        if (getPlayerTotalBet() == 0) {
+            throw new RuntimeException("Initial bet is not set.");
+        }
+
+        if (handToPlay.getHandList().size() == 2 && (handToPlay.getHandList().get(0).getValue() == handToPlay.getHandList().get(1).getValue())) {
+            gameAfterSplitDecision();
+        }
+
+        if (handToPlay.getHandValue() == 10 || handToPlay.getHandValue() == 11) {
+            gameAfterDoubleDownDecision();
+        }
+
+        while (handToPlay.getHandValue() < 18) {
+            gameAfterHitDecision();
+        }
+
+        if (handToPlay.getHandValue() > 19) {
+            gameAfterStandDecision();
+        }
+
+        this.handWinner();
+
     }
 
-    public void addBetToBetPool(int bet) {
+    public void setPlayerBet(int individualBet) {
+        this.addBetToTotalBet(individualBet);
 
+    }
+
+    public boolean betIsSet(boolean set) {
+        if (set) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void addBetToTotalBet(int individualBet) {
+        betTotal.add(individualBet);
+    }
+
+    public Integer getPlayerTotalBet() {
+
+        int fullBet = 0;
+        for (int amountBet : betTotal) {
+            fullBet += amountBet;
+        }
+        return fullBet;
     }
 
     public Card drawCard(Deck shuffledDeck){
@@ -82,12 +129,12 @@ public class Game {
             return this.croupierHand;
         }
     }
-//
-//    public Hand getCroupierHand(Player croupier) {
-//
-//        return this.playerHand;
-//    }
 
+    public boolean isBust(boolean isBust) {
+        if (isBust) {
+            return true;
+        } else {return false; }
+    }
 
     public Player getPlayer() {
         return player;
@@ -105,9 +152,46 @@ public class Game {
         return deck;
     }
 
-    public void setBet(int bet) {
-        this.bet = bet;
+    public Player handWinner() {
+        if (this.getPlayerHand(PlayerType.PLAYER).getHandValue() > this.getPlayerHand(PlayerType.CROUPIER).getHandValue()) {
+            return player;
+        }
+        return croupier;
     }
+
+    public void gameAfterStandDecision() {
+
+        while (this.croupierHand.getHandValue() < 17 && !this.croupierHand.isBust()) {
+            this.croupierHand.addCardToHand(drawCard(this.deck));
+        }
+
+    }
+
+    public void gameAfterHitDecision() {
+
+        this.playerHand.addCardToHand(drawCard(this.deck));
+
+    }
+
+    public void gameAfterDoubleDownDecision() {
+
+        this.setPlayerBet(initialBet);
+        this.playerHand.addCardToHand(drawCard(this.deck));
+
+    }
+
+    public void gameAfterSplitDecision() {
+
+        Hand splitPlayerHand = new Hand(this.player);
+        playerHand.removeCardFromHand(this.getPlayerHand(PlayerType.PLAYER).getHandList().get(1));
+
+        splitPlayerHand.addCardToHand(this.getPlayerHand(PlayerType.PLAYER).getHandList().get(1));
+        this.setPlayerBet(initialBet);
+
+        this.gameMainPart(splitPlayerHand);
+
+    }
+
 
 
 }

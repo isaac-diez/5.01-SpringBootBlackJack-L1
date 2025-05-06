@@ -11,7 +11,7 @@ class HandTest {
     void getHandList() {
 
         Player Isaac = new Player("Isaac", PlayerType.PLAYER);
-        Game gameTest = new Game(Isaac);
+        Game gameTest = new Game(Isaac, 50);
         gameTest.gameInit();
 
         Assertions.assertEquals(2,gameTest.getPlayerHand(PlayerType.PLAYER).getHandList().size());
@@ -38,7 +38,7 @@ class HandTest {
     void getHandValue() {
 
         Player Isaac = new Player("Isaac", PlayerType.PLAYER);
-        Game gameTest = new Game(Isaac);
+        Game gameTest = new Game(Isaac, 50);
         gameTest.gameInit();
 
         System.out.println("Player Hand:");

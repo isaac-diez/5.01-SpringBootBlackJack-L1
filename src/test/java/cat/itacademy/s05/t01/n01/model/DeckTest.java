@@ -19,7 +19,6 @@ class DeckTest {
         }
         Assertions.assertEquals(48, newDeck.getDeckSize());
 
-
     }
 
     @Test

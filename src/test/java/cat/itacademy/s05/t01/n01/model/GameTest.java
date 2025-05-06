@@ -14,7 +14,7 @@ class GameTest {
 
         Player Isaac = new Player("Isaac", PlayerType.PLAYER);
 
-        Game gameTest = new Game(Isaac);
+        Game gameTest = new Game(Isaac, 50);
 
         int i = 0;
         for (Card card : gameTest.getDeck().getDeckList()) {
@@ -51,5 +51,27 @@ class GameTest {
         Assertions.assertEquals(44,gameTest.getDeck().getDeckSize());
 
 
+    }
+
+    @Test
+    void getPlayerBet() {
+
+        Player Isaac = new Player("Isaac", PlayerType.PLAYER);
+
+        Game gameTest = new Game(Isaac, 50);
+
+        gameTest.gameInit();
+
+
+        System.out.println("Bets: " + gameTest.getPlayerTotalBet());
+
+
+        Assertions.assertEquals(50,gameTest.getPlayerTotalBet());
+
+//        gameTest.getPlayerHand(PlayerType.PLAYER).addCardtoHand(gameTest.drawCard(gameTest.getDeck()));
+    }
+
+    @Test
+    void getPlayerTotalBet() {
     }
 }
