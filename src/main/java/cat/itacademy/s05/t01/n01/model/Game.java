@@ -6,7 +6,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Table;
 import org.springframework.data.annotation.Id;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.function.Consumer;
 
@@ -28,6 +30,7 @@ public class Game {
     private Player croupier;
     private Deck deck = new Deck();
     private int bet;
+    private List<Integer> betPool;
     private Hand playerHand;
     private Hand croupierHand;
 
@@ -37,6 +40,7 @@ public class Game {
         this.deck = this.deck.shuffleDeck();
         this.playerHand = new Hand(this.player);
         this.croupierHand = new Hand(this.croupier);
+        this.betPool = new ArrayList<>();
     }
 
     public void gameInit() {
@@ -51,8 +55,12 @@ public class Game {
 
     }
 
-    public Integer getPlayerBet(int bet) {
+    public Integer getPlayerBet() {
         return bet;
+    }
+
+    public void addBetToBetPool(int bet) {
+
     }
 
     public Card drawCard(Deck shuffledDeck){
@@ -95,10 +103,6 @@ public class Game {
 
     public Deck getDeck() {
         return deck;
-    }
-
-    public int getBet() {
-        return bet;
     }
 
     public void setBet(int bet) {
