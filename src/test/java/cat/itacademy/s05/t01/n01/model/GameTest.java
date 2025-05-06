@@ -35,6 +35,8 @@ class GameTest {
             j++;
         }
 
+        System.out.println("Hand value: " + gameTest.getPlayerHand(PlayerType.PLAYER).getHandValue());
+
         Assertions.assertEquals(2,gameTest.getPlayerHand(PlayerType.CROUPIER).getHandList().size());
 
         j=0;
@@ -43,6 +45,8 @@ class GameTest {
                     + " of " + gameTest.getPlayerHand(PlayerType.CROUPIER).getHandList().get(j).getSuit());
             j++;
         }
+
+        System.out.println("Hand value: " + gameTest.getPlayerHand(PlayerType.CROUPIER).getHandValue());
 
         Assertions.assertEquals(44,gameTest.getDeck().getDeckSize());
 
