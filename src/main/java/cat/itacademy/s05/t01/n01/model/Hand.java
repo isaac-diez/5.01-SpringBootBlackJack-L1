@@ -7,8 +7,11 @@ public class Hand {
 
     private List<Card> hand = new ArrayList<>();
     private int result = 0;
+    private Player player;
 
-    public Hand() { }
+    public Hand(Player player) {
+        this.player = player;
+    }
 
     public void addCardtoHand(Card card) {
         hand.add(card);
@@ -42,7 +45,7 @@ public class Hand {
         return hand.size() == 2 && getHandValue() == 21;
     }
 
-    public List<Card> getCards() {
+    public List<Card> getHandList() {
         return hand;
     }
 }
