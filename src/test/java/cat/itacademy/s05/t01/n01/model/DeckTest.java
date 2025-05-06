@@ -36,10 +36,31 @@ class DeckTest {
     @Test
     void getShuffledDeck() {
         newDeck.populateDeck();
-        newDeck = newDeck.shuffleDeck();
+        Deck shuffledDeck = newDeck.shuffleDeck();
+
+        for (Integer j : shuffledDeck.getDeckMap().keySet()) {
+            System.out.println("key: " + j + " value: " + shuffledDeck.getDeckMap().get(j).getName() + " of " + shuffledDeck.getDeckMap().get(j).getSuit());
+        }
+    }
+
+    @Test
+    void removeCardFromDeck() {
+        newDeck.populateDeck();
+        Deck shuffledDeck = newDeck.shuffleDeck();
+
+        Assertions.assertEquals(48, shuffledDeck.getDeckSize());
 
         for (Integer j : newDeck.getDeckMap().keySet()) {
-            System.out.println("key: " + j + " value: " + newDeck.getDeckMap().get(j).getName() + " of " + newDeck.getDeckMap().get(j).getSuit());
+            System.out.println("key: " + j + " value: " + shuffledDeck.getDeckMap().get(j).getName() + " of " + shuffledDeck.getDeckMap().get(j).getSuit());
         }
+
+        shuffledDeck.removeCardFromDeck();
+
+        Assertions.assertEquals(47, shuffledDeck.getDeckSize());
+
+        for (Integer j : shuffledDeck.getDeckMap().keySet()) {
+            System.out.println("key: " + j + " value: " + shuffledDeck.getDeckMap().get(j).getName() + " of " + shuffledDeck.getDeckMap().get(j).getSuit());
+        }
+
     }
 }

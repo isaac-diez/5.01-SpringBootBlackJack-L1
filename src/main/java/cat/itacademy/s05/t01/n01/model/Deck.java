@@ -7,7 +7,7 @@ public class Deck {
     private Map<Integer,Card> deck = new HashMap<>();
 
     public Deck() {
-
+        this.populateDeck();
     }
 
     public void populateDeck() {
@@ -43,6 +43,7 @@ public class Deck {
     }
 
     public Deck shuffleDeck() {
+
         List<Integer> listOfCards = new ArrayList<>();
 
         int i;
@@ -52,7 +53,6 @@ public class Deck {
 
         Collections.shuffle(listOfCards);
 
-        this.populateDeck();
         Deck shuffledDeck = new Deck();
 
         i = 1;
@@ -62,6 +62,8 @@ public class Deck {
         }
 
         return shuffledDeck;
+
+
 
     }
 
@@ -73,8 +75,11 @@ public class Deck {
         return this.deck;
     }
 
-    public Card removeCardFromDeck(Integer key){
-        return this.deck.remove(key);
+    public Card removeCardFromDeck(){
+        return this.deck.remove(1);
     }
 
+    public Card getFirstCard() {
+        return this.deck.get(1);
+    }
 }
