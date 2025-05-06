@@ -28,15 +28,33 @@ public class Game {
     private Player croupier;
     private Deck deck;
     private int bet;
+    private Hand playerHand;
+    private Hand croupierHand;
 
-    public void game(Player player) {
+    public Game(Player player) {
         this.player = player;
         this.croupier = new Player("Croupier", PlayerType.CROUPIER);
         this.deck = new Deck();
+        this.playerHand = new Hand(this.player);
+        this.croupierHand = new Hand(this.croupier);
     }
 
-    public void gamePreparation() {
-        this.deck.shuffleDeck();
+    public void gameInit() {
+        Deck shuffledDeck = this.deck.shuffleDeck();
+
+        //Draw cards for player
+        this.playerHand.addCardtoHand(drawCard(shuffledDeck));
+        shuffledDeck.removeCardFromDeck();
+
+        this.playerHand.addCardtoHand(drawCard(shuffledDeck));
+        shuffledDeck.removeCardFromDeck();
+
+        //Draw cards for croupier
+        this.croupierHand.addCardtoHand(drawCard(shuffledDeck));
+        shuffledDeck.removeCardFromDeck();
+
+        this.croupierHand.addCardtoHand(drawCard(shuffledDeck));
+        shuffledDeck.removeCardFromDeck();
     }
 
     public Integer getPlayerBet(int bet) {
@@ -50,9 +68,48 @@ public class Game {
         if (!iteratorShuffledDeck.hasNext()) {
             throw new NoSuchElementException();
         }
-        return shuffledDeck.removeCardFromDeck(1);
+        return shuffledDeck.removeCardFromDeck();
     }
 
+    public Hand getPlayerHand(PlayerType playerType) {
+
+        if (playerType == PlayerType.PLAYER) {
+            return this.playerHand;
+
+        } else {
+            return this.croupierHand;
+        }
+    }
+//
+//    public Hand getCroupierHand(Player croupier) {
+//
+//        return this.playerHand;
+//    }
+
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public Player getCroupier() {
+        return croupier;
+    }
+
+    public Deck getDeck() {
+        return deck;
+    }
+
+    public int getBet() {
+        return bet;
+    }
+
+    public void setBet(int bet) {
+        this.bet = bet;
+    }
 
 
 }
