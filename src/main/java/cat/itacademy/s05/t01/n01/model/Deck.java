@@ -12,20 +12,20 @@ public class Deck {
 
     public void populateDeck() {
 
-        for (CardNumber cardNumber : CardNumber.values()) {
-            this.deck.add(new Card((String) cardNumber.name(),(String) CardSuit.HEARTS.name()));
+        for (CardName cardName : CardName.values()) {
+            this.deck.add(new Card(cardName, CardSuit.HEARTS));
         }
 
-        for (CardNumber cardNumber : CardNumber.values()) {
-            this.deck.add(new Card(cardNumber.name(),CardSuit.CLUBS.name()));
+        for (CardName cardName : CardName.values()) {
+            this.deck.add(new Card(cardName,CardSuit.CLUBS));
         }
 
-        for (CardNumber cardNumber : CardNumber.values()) {
-            this.deck.add(new Card(cardNumber.name(),CardSuit.DIAMONDS.name()));
+        for (CardName cardName : CardName.values()) {
+            this.deck.add(new Card(cardName,CardSuit.DIAMONDS));
         }
 
-        for (CardNumber cardNumber : CardNumber.values()) {
-            this.deck.add(new Card(cardNumber.name(),CardSuit.SPADES.name()));
+        for (CardName cardName : CardName.values()) {
+            this.deck.add(new Card(cardName,CardSuit.SPADES));
         }
 
     }

@@ -8,9 +8,9 @@ public class Card {
     private String suit;
     private int value;
 
-    public Card(String name, String suit) {
-        this.name = name;
-        this.suit = suit;
+    public Card(CardName cardName, CardSuit cardSuit) {
+        this.name = cardName.name();
+        this.suit = cardSuit.name();
         this.value = CardValue.valueOf(name).getValue();
     }
 

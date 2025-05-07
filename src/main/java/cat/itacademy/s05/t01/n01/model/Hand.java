@@ -6,7 +6,7 @@ import java.util.List;
 public class Hand {
 
     private List<Card> hand = new ArrayList<>();
-    private int result = 0;
+    private int value;
     private Player player;
 
     public Hand(Player player) {
@@ -23,30 +23,30 @@ public class Hand {
 
     public int getHandValue() {
 
-        int total = 0;
+        this.value = 0;
         int aceCount = 0;
 
         for (Card card : hand) {
-            total += card.getValue();
+            this.value += card.getValue();
             if (card.isAce()){
                 aceCount++;
             }
         }
 
-        while (total > 21 && aceCount > 0) {
-            total -= 10;
+        while (this.value > 21 && aceCount > 0) {
+            this.value -= 10;
             aceCount--;
         }
 
-        if (total > 21) {
+        if (this.value > 21) {
             isBust();
         }
 
-        return total;
+        return this.value;
     }
 
     public boolean isBust() {
-        return getHandValue() > 21;
+        return true;
     }
 
     public boolean isBlackjack() {

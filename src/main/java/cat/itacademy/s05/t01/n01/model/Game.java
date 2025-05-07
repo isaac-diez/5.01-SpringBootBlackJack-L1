@@ -32,6 +32,7 @@ public class Game {
     private List<Integer> betTotal;
     private Hand playerHand;
     private Hand croupierHand;
+    private Hand splitHand;
     private PlayerDecision playerDecision;
 
     public Game(Player player, int initialBet) {
@@ -39,6 +40,7 @@ public class Game {
         this.croupier = new Player("Croupier", PlayerType.CROUPIER);
         this.deck = this.deck.shuffleDeck();
         this.playerHand = new Hand(this.player);
+        this.splitHand = new Hand(this.player);
         this.croupierHand = new Hand(this.croupier);
         this.initialBet = initialBet;
         this.betTotal = new ArrayList<>();
@@ -68,7 +70,7 @@ public class Game {
             gameAfterSplitDecision();
         }
 
-        if (handToPlay.getHandValue() == 10 || handToPlay.getHandValue() == 11) {
+        if (handToPlay.getHandValue() > 11) {
             gameAfterDoubleDownDecision();
         }
 
@@ -153,10 +155,15 @@ public class Game {
     }
 
     public Player handWinner() {
-        if (this.getPlayerHand(PlayerType.PLAYER).getHandValue() > this.getPlayerHand(PlayerType.CROUPIER).getHandValue()) {
-            return player;
+
+        if (this.getPlayerHand(PlayerType.PLAYER).isBust()) {
+            return croupier;
         }
-        return croupier;
+
+        if (this.getPlayerHand(PlayerType.PLAYER).getHandValue() < this.getPlayerHand(PlayerType.CROUPIER).getHandValue()) {
+            return croupier;
+        }
+        return player;
     }
 
     public void gameAfterStandDecision() {
@@ -164,6 +171,8 @@ public class Game {
         while (this.croupierHand.getHandValue() < 17 && !this.croupierHand.isBust()) {
             this.croupierHand.addCardToHand(drawCard(this.deck));
         }
+
+        this.handWinner();
 
     }
 
@@ -182,13 +191,15 @@ public class Game {
 
     public void gameAfterSplitDecision() {
 
-        Hand splitPlayerHand = new Hand(this.player);
+        splitHand.addCardToHand(this.getPlayerHand(PlayerType.PLAYER).getHandList().get(1));
+
         playerHand.removeCardFromHand(this.getPlayerHand(PlayerType.PLAYER).getHandList().get(1));
 
-        splitPlayerHand.addCardToHand(this.getPlayerHand(PlayerType.PLAYER).getHandList().get(1));
         this.setPlayerBet(initialBet);
 
-        this.gameMainPart(splitPlayerHand);
+        this.gameMainPart(playerHand);
+
+        this.gameMainPart(splitHand);
 
     }
 

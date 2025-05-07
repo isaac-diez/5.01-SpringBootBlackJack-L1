@@ -74,4 +74,98 @@ class GameTest {
     @Test
     void getPlayerTotalBet() {
     }
+
+    @Test
+    void gameMainPart() {
+
+        Player Isaac = new Player("Isaac", PlayerType.PLAYER);
+
+        Game gameTest = new Game(Isaac, 50);
+
+        int i = 0;
+        for (Card card : gameTest.getDeck().getDeckList()) {
+            System.out.println("key: " + i + " card: " + gameTest.getDeck().getDeckList().get(i).getName() +
+                    " of " + gameTest.getDeck().getDeckList().get(i).getSuit());
+            i++;
+        }
+        System.out.println();
+
+        Assertions.assertEquals(48, newDeck.getDeckSize());
+
+        gameTest.gameInit();
+
+        Assertions.assertEquals(2,gameTest.getPlayerHand(PlayerType.PLAYER).getHandList().size());
+
+        System.out.println("Player Hand");
+        int j=0;
+        for (Card card : gameTest.getPlayerHand(PlayerType.PLAYER).getHandList()) {
+            System.out.println("key: " + j + " value: " + gameTest.getPlayerHand(PlayerType.PLAYER).getHandList().get(j).getName()
+                    + " of " + gameTest.getPlayerHand(PlayerType.PLAYER).getHandList().get(j).getSuit());
+            j++;
+        }
+
+        System.out.println("Hand value: " + gameTest.getPlayerHand(PlayerType.PLAYER).getHandValue());
+
+        Assertions.assertEquals(2,gameTest.getPlayerHand(PlayerType.CROUPIER).getHandList().size());
+
+        System.out.println();
+        System.out.println("Croupier Hand");
+        j=0;
+        for (Card card : gameTest.getPlayerHand(PlayerType.CROUPIER).getHandList()) {
+            System.out.println("key: " + j + " value: " + gameTest.getPlayerHand(PlayerType.CROUPIER).getHandList().get(j).getName()
+                    + " of " + gameTest.getPlayerHand(PlayerType.CROUPIER).getHandList().get(j).getSuit());
+            j++;
+        }
+
+        System.out.println("Hand value: " + gameTest.getPlayerHand(PlayerType.CROUPIER).getHandValue());
+
+        Assertions.assertEquals(44,gameTest.getDeck().getDeckSize());
+
+        gameTest.gameMainPart(gameTest.getPlayerHand(PlayerType.PLAYER));
+
+        if (gameTest.getPlayerHand(PlayerType.PLAYER).getHandList().size() > 2) {
+
+            j=0;
+            for (Card card : gameTest.getPlayerHand(PlayerType.PLAYER).getHandList()) {
+                System.out.println("key: " + j + " value: " + gameTest.getPlayerHand(PlayerType.PLAYER).getHandList().get(j).getName()
+                        + " of " + gameTest.getPlayerHand(PlayerType.PLAYER).getHandList().get(j).getSuit());
+                j++;
+            }
+
+        }
+
+        System.out.println("Hand value: " + gameTest.getPlayerHand(PlayerType.PLAYER).getHandValue());
+
+        System.out.println("Hand Winner: " + gameTest.handWinner().getName());
+
+    }
+
+    @Test
+    void gameAfterSplitDecision() {
+
+        Player Isaac = new Player("Isaac", PlayerType.PLAYER);
+
+        Game gameTest = new Game(Isaac, 50);
+
+        gameTest.setPlayerBet(50);
+
+        Card card1 = new Card(CardName.EIGHT, CardSuit.CLUBS);
+        Card card2 = new Card(CardName.EIGHT,CardSuit.SPADES);
+
+        gameTest.getPlayerHand(PlayerType.PLAYER).addCardToHand(card1);
+        gameTest.getPlayerHand(PlayerType.PLAYER).addCardToHand(card2);
+
+        Card card3 = new Card(CardName.THREE, CardSuit.HEARTS);
+        Card card4 = new Card(CardName.KING,CardSuit.DIAMONDS);
+
+        gameTest.getPlayerHand(PlayerType.CROUPIER).addCardToHand(card1);
+        gameTest.getPlayerHand(PlayerType.CROUPIER).addCardToHand(card2);
+
+        gameTest.gameMainPart(gameTest.getPlayerHand(PlayerType.PLAYER));
+
+        System.out.println("Hand Winner: " + gameTest.handWinner().getName());
+
+
+
+    }
 }
