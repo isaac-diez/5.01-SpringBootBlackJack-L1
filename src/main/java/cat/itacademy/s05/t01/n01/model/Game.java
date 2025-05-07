@@ -40,7 +40,6 @@ public class Game {
         this.croupier = new Player("Croupier", PlayerType.CROUPIER);
         this.deck = this.deck.shuffleDeck();
         this.playerHand = new Hand(this.player);
-        this.splitHand = new Hand(this.player);
         this.croupierHand = new Hand(this.croupier);
         this.initialBet = initialBet;
         this.betTotal = new ArrayList<>();
@@ -74,15 +73,15 @@ public class Game {
             gameAfterDoubleDownDecision();
         }
 
-        while (handToPlay.getHandValue() < 18) {
+        while (handToPlay.getHandValue() < 12) {
             gameAfterHitDecision();
         }
 
-        if (handToPlay.getHandValue() > 19) {
+        if (handToPlay.getHandValue() > 18) {
             gameAfterStandDecision();
         }
 
-        this.handWinner();
+
 
     }
 
@@ -132,6 +131,12 @@ public class Game {
         }
     }
 
+    public Hand getPlayerSplitHand() {
+
+            return this.splitHand;
+
+    }
+
     public boolean isBust(boolean isBust) {
         if (isBust) {
             return true;
@@ -154,31 +159,41 @@ public class Game {
         return deck;
     }
 
-    public Player handWinner() {
+    public String handWinner() {
 
-        if (this.getPlayerHand(PlayerType.PLAYER).isBust()) {
-            return croupier;
+        if (this.getPlayerHand(PlayerType.PLAYER).getHandValue() > 21) {
+            return this.croupier.getName();
         }
 
         if (this.getPlayerHand(PlayerType.PLAYER).getHandValue() < this.getPlayerHand(PlayerType.CROUPIER).getHandValue()) {
-            return croupier;
+            return this.croupier.getName();
         }
-        return player;
+
+        if (this.getPlayerHand(PlayerType.PLAYER).getHandValue() == this.getPlayerHand(PlayerType.CROUPIER).getHandValue()) {
+            return "Empate";
+        }
+        return this.player.getName();
     }
 
     public void gameAfterStandDecision() {
 
-        while (this.croupierHand.getHandValue() < 17 && !this.croupierHand.isBust()) {
+        while (this.croupierHand.getHandValue() < 17 && this.croupierHand.isBust()) {
             this.croupierHand.addCardToHand(drawCard(this.deck));
         }
 
         this.handWinner();
 
+        System.out.println("HAND WINNER: " + this.handWinner());
+
     }
 
     public void gameAfterHitDecision() {
 
-        this.playerHand.addCardToHand(drawCard(this.deck));
+        if (!splitHand.getHand().isEmpty()) {
+            splitHand.addCardToHand(drawCard(this.deck));
+        } else {
+            this.playerHand.addCardToHand(drawCard(this.deck));
+        }
 
     }
 
@@ -191,13 +206,19 @@ public class Game {
 
     public void gameAfterSplitDecision() {
 
-        splitHand.addCardToHand(this.getPlayerHand(PlayerType.PLAYER).getHandList().get(1));
+        splitHand = new Hand(this.player);
+
+//        splitHand.addCardToHand(this.getPlayerHand(PlayerType.PLAYER).getHandList().get(1));
+
+        Card cardToAddToSplitHand = this.getPlayerHand(PlayerType.PLAYER).getHandList().get(1);
 
         playerHand.removeCardFromHand(this.getPlayerHand(PlayerType.PLAYER).getHandList().get(1));
 
         this.setPlayerBet(initialBet);
 
         this.gameMainPart(playerHand);
+
+        splitHand.addCardToHand(cardToAddToSplitHand);
 
         this.gameMainPart(splitHand);
 

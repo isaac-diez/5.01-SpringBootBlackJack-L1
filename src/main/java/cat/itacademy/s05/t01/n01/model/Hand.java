@@ -6,43 +6,52 @@ import java.util.List;
 public class Hand {
 
     private List<Card> hand = new ArrayList<>();
-    private int value;
+    private int value = this.getHandValue();
     private Player player;
+    private boolean isSplitHand;
 
     public Hand(Player player) {
         this.player = player;
     }
 
     public void addCardToHand(Card card) {
-        hand.add(card);
+        this.getHand().add(card);
     }
 
     public void removeCardFromHand(Card card) {
-        hand.remove(card);
+        this.getHand().remove(card);
+    }
+
+    public List<Card> getHand() {
+        return hand;
+    }
+
+    public boolean isSplitHand() {
+        return true;
     }
 
     public int getHandValue() {
 
-        this.value = 0;
+        value = 0;
         int aceCount = 0;
 
         for (Card card : hand) {
-            this.value += card.getValue();
+            value += card.getValue();
             if (card.isAce()){
                 aceCount++;
             }
         }
 
-        while (this.value > 21 && aceCount > 0) {
-            this.value -= 10;
+        while (value > 21 && aceCount > 0) {
+            value -= 10;
             aceCount--;
         }
 
-        if (this.value > 21) {
+        if (value > 21) {
             isBust();
         }
 
-        return this.value;
+        return value;
     }
 
     public boolean isBust() {
