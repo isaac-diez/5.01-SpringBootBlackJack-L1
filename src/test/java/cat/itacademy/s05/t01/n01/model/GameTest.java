@@ -259,6 +259,5 @@ class GameTest {
 
         System.out.println("Hand Winner: " + gameTest.handWinner(gameTest.getPlayerHand(PlayerType.PLAYER)));
 
-
     }
 }

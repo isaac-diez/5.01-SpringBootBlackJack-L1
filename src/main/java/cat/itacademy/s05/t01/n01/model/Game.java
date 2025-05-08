@@ -179,10 +179,26 @@ public class Game {
         int playerScore = hand.getHandValue();
         int croupierScore = croupierHand.getHandValue();
 
-        if (playerScore > 21) return croupier.getName();
-        if (croupierScore > 21) return player.getName();
-        if (playerScore > croupierScore) return player.getName();
-        if (playerScore < croupierScore) return croupier.getName();
+        if (playerScore > 21) {
+            this.player.getGains().add(initialBet*-1);
+            return croupier.getName();
+        }
+
+        if (croupierScore > 21) {
+            this.player.getGains().add(initialBet);
+            return player.getName();
+        }
+
+        if (playerScore > croupierScore) {
+            this.player.getGains().add(initialBet);
+            return player.getName();
+        }
+
+        if (playerScore < croupierScore) {
+            this.player.getGains().add(initialBet*-1);
+            return croupier.getName();
+        }
+
         return "Empate";
     }
 
@@ -204,6 +220,9 @@ public class Game {
             System.out.println("Puntuación Jugador (split): " + splitHand.getHandValue());
             System.out.println("Ganador mano split: " + handWinner(splitHand));
         }
+
+        System.out.println("Player Balance: " + this.getPlayer().getTotalGains() + "€");
+
     }
 
 
