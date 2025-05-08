@@ -136,7 +136,7 @@ class GameTest {
 
         System.out.println("Hand value: " + gameTest.getPlayerHand(PlayerType.PLAYER).getHandValue());
 
-        System.out.println("Hand Winner: " + gameTest.handWinner());
+        System.out.println("Hand Winner: " + gameTest.handWinner(gameTest.getPlayerHand(PlayerType.PLAYER)));
 
     }
 
@@ -199,12 +199,65 @@ class GameTest {
             j++;
         }
 
+        gameTest.gameAfterStandDecision();
+
+//        System.out.println("Hand value: " + gameTest.getPlayerHand(PlayerType.CROUPIER).getHandValue());
+//
+//
+//
+//        System.out.println("Hand Winner: " + gameTest.handWinner(gameTest.getPlayerHand(PlayerType.PLAYER)));
+
+
+
+    }
+
+    @Test
+    void playGame() {
+        Player Isaac = new Player("Isaac", PlayerType.PLAYER);
+
+        Game gameTest = new Game(Isaac, 50);
+
+//        int i = 0;
+//        for (Card card : gameTest.getDeck().getDeckList()) {
+//            System.out.println("key: " + i + " card: " + gameTest.getDeck().getDeckList().get(i).getName() +
+//                    " of " + gameTest.getDeck().getDeckList().get(i).getSuit());
+//            i++;
+//        }
+//        System.out.println();
+//
+//        Assertions.assertEquals(48, newDeck.getDeckSize());
+
+        gameTest.playGame();
+
+//        Assertions.assertEquals(2,gameTest.getPlayerHand(PlayerType.PLAYER).getHandList().size());
+
+        System.out.println("Player Hand");
+        int j=0;
+        for (Card card : gameTest.getPlayerHand(PlayerType.PLAYER).getHandList()) {
+            System.out.println("key: " + j + " value: " + gameTest.getPlayerHand(PlayerType.PLAYER).getHandList().get(j).getName()
+                    + " of " + gameTest.getPlayerHand(PlayerType.PLAYER).getHandList().get(j).getSuit());
+            j++;
+        }
+
+        System.out.println("Hand value: " + gameTest.getPlayerHand(PlayerType.PLAYER).getHandValue());
+
+//        Assertions.assertEquals(2,gameTest.getPlayerHand(PlayerType.CROUPIER).getHandList().size());
+
+        System.out.println();
+        System.out.println("Croupier Hand");
+        j=0;
+        for (Card card : gameTest.getPlayerHand(PlayerType.CROUPIER).getHandList()) {
+            System.out.println("key: " + j + " value: " + gameTest.getPlayerHand(PlayerType.CROUPIER).getHandList().get(j).getName()
+                    + " of " + gameTest.getPlayerHand(PlayerType.CROUPIER).getHandList().get(j).getSuit());
+            j++;
+        }
+
         System.out.println("Hand value: " + gameTest.getPlayerHand(PlayerType.CROUPIER).getHandValue());
 
+//        Assertions.assertEquals(44,gameTest.getDeck().getDeckSize());
 
 
-        System.out.println("Hand Winner: " + gameTest.handWinner());
-
+        System.out.println("Hand Winner: " + gameTest.handWinner(gameTest.getPlayerHand(PlayerType.PLAYER)));
 
 
     }

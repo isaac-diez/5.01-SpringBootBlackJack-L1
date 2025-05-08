@@ -6,7 +6,6 @@ import java.util.List;
 public class Hand {
 
     private List<Card> hand = new ArrayList<>();
-    private int value = this.getHandValue();
     private Player player;
     private boolean isSplitHand;
 
@@ -15,11 +14,11 @@ public class Hand {
     }
 
     public void addCardToHand(Card card) {
-        this.getHand().add(card);
+        hand.add(card);
     }
 
     public void removeCardFromHand(Card card) {
-        this.getHand().remove(card);
+        hand.remove(card);
     }
 
     public List<Card> getHand() {
@@ -27,17 +26,20 @@ public class Hand {
     }
 
     public boolean isSplitHand() {
-        return true;
+        return isSplitHand;
+    }
+
+    public void setSplitHand(boolean splitHand) {
+        isSplitHand = splitHand;
     }
 
     public int getHandValue() {
-
-        value = 0;
+        int value = 0;
         int aceCount = 0;
 
         for (Card card : hand) {
             value += card.getValue();
-            if (card.isAce()){
+            if (card.isAce()) {
                 aceCount++;
             }
         }
@@ -47,15 +49,11 @@ public class Hand {
             aceCount--;
         }
 
-        if (value > 21) {
-            isBust();
-        }
-
         return value;
     }
 
     public boolean isBust() {
-        return true;
+        return getHandValue() > 21;
     }
 
     public boolean isBlackjack() {
@@ -66,3 +64,4 @@ public class Hand {
         return hand;
     }
 }
+
