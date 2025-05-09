@@ -31,6 +31,16 @@ public class PlayerService {
 
     }
 
+    public Mono<Player> getPlayerById(int id) {
+        if (id==0) {
+            return Mono.error(new IllegalArgumentException("The id is null or invalid"));
+        }
+        return playerRepo.findById(id).
+                switchIfEmpty(Mono.error(new IllegalArgumentException("There isn't a player with id" + id + "in the DataBase")));
+    }
+
+
+
 
 
 }

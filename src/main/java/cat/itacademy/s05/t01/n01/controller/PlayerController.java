@@ -27,4 +27,9 @@ public class PlayerController {
         return playerService.getAllPlayers();
     }
 
+    @GetMapping("/getOne/{id}")
+    public Mono<Player> getPlayerById(@PathVariable int id) {
+        return playerService.getPlayerById(id);
+    }
+
 }

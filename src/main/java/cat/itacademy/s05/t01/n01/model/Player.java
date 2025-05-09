@@ -1,8 +1,11 @@
 package cat.itacademy.s05.t01.n01.model;
 
 
+import org.springframework.data.annotation.Id;
+
 public class Player {
 
+    @Id
     private int id;
     private String name;
     private PlayerType type;
