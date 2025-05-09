@@ -1,18 +1,9 @@
 package cat.itacademy.s05.t01.n01.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Table;
-import org.springframework.data.annotation.Id;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-
-@Entity
-@Table(name="games")
 
 public class Game {
 
@@ -22,8 +13,6 @@ public class Game {
     //draw croupier cards, calculate result
     //calculate game winner
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     String id;
     private Player player;
     private Player croupier;
@@ -180,22 +169,22 @@ public class Game {
         int croupierScore = croupierHand.getHandValue();
 
         if (playerScore > 21) {
-            this.player.getGains().add(initialBet*-1);
+            this.player.setGains(initialBet*-1);
             return croupier.getName();
         }
 
         if (croupierScore > 21) {
-            this.player.getGains().add(initialBet);
+            this.player.setGains(initialBet);
             return player.getName();
         }
 
         if (playerScore > croupierScore) {
-            this.player.getGains().add(initialBet);
+            this.player.setGains(initialBet);
             return player.getName();
         }
 
         if (playerScore < croupierScore) {
-            this.player.getGains().add(initialBet*-1);
+            this.player.setGains(initialBet*-1);
             return croupier.getName();
         }
 
@@ -221,7 +210,7 @@ public class Game {
             System.out.println("Ganador mano split: " + handWinner(splitHand));
         }
 
-        System.out.println("Player Balance: " + this.getPlayer().getTotalGains() + "€");
+        System.out.println("Player Balance: " + this.getPlayer().getGains() + "€");
 
     }
 
