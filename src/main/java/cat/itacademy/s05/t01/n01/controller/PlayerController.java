@@ -37,4 +37,7 @@ public class PlayerController {
         return playerService.updatePlayer(player);
     }
 
+    @DeleteMapping("/delete/{id}")
+    public Mono<Void> deletePlayer(@PathVariable int id) { return playerService.deletePlayer(id); }
+
 }
