@@ -32,4 +32,9 @@ public class PlayerController {
         return playerService.getPlayerById(id);
     }
 
+    @PutMapping("/update")
+    public Mono<Player> updatePlayer(@RequestBody Player player){
+        return playerService.updatePlayer(player);
+    }
+
 }
