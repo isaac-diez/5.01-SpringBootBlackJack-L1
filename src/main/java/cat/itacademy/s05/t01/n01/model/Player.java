@@ -24,7 +24,7 @@ public class Player {
         gains = gains + bet;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
