@@ -45,7 +45,7 @@ public class PlayerService {
             return Mono.error(new IllegalArgumentException("The name is null or invalid"));
         }
         return playerRepo.findByName(name).
-                switchIfEmpty((Mono.error(new IllegalArgumentException("There isn't a player with name: " + name + " in the DB"))));
+                switchIfEmpty((Mono.empty()));
     }
 
     public Mono<Player> updatePlayer(Player player){
