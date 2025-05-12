@@ -1,18 +1,18 @@
 package cat.itacademy.s05.t01.n01.model;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+@Document(collection="games")
+
 public class Game {
 
-    //get player & croupier
-    //place player bet
-    //draw player cards, calculate result, if player not-bust, take decision
-    //draw croupier cards, calculate result
-    //calculate game winner
-
+    @Id
     String id;
     private Player player;
     private Player croupier;
@@ -35,14 +35,14 @@ public class Game {
     }
 
     public void playGame() {
-        this.gameInit();                        // reparte cartas
-        this.gameMainPart(playerHand);         // juega mano principal
+        this.gameInit();
+        this.gameMainPart(playerHand);
 
         if (this.splitHand != null) {
-            this.gameMainPart(splitHand);      // si hay mano split, la juega
+            this.gameMainPart(splitHand);
         }
 
-        this.gameAfterStandDecision();         // luego juega el croupier y se evalúan ganadores
+        this.gameAfterStandDecision();
     }
 
 
