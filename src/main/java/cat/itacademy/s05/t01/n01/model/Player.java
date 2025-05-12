@@ -1,12 +1,12 @@
 package cat.itacademy.s05.t01.n01.model;
-
-
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
+@Table("players")
 public class Player {
 
     @Id
-    private int id;
+    private Integer id;
     private String name;
     private PlayerType type;
     private int gains = 0;
