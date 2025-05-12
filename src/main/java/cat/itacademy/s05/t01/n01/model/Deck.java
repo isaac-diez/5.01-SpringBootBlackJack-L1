@@ -51,7 +51,7 @@ public class Deck {
     }
 
     public Card removeCardFromDeck(){
-        return this.deck.removeFirst();
+        return this.deck.remove(0);
     }
 
     public Card getFirstCard() {

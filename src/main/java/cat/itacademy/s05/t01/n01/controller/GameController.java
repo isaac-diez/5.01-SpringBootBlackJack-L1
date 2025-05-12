@@ -2,6 +2,7 @@ package cat.itacademy.s05.t01.n01.controller;
 
 import cat.itacademy.s05.t01.n01.dto.GameRequest;
 import cat.itacademy.s05.t01.n01.model.Game;
+import cat.itacademy.s05.t01.n01.model.Player;
 import cat.itacademy.s05.t01.n01.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,13 @@ public class GameController {
     public Mono<ResponseEntity<Game>> createGame(@RequestBody GameRequest request) {
         return gameService.createGame(request.getPlayerName(), request.getInitialBet())
                 .map(game -> ResponseEntity.status(HttpStatus.CREATED).body(game));
+    }
+
+    @GetMapping("/{id}")
+    public Mono<ResponseEntity<Game>> getGameById(@PathVariable String id) {
+        return gameService.getGameById(id)
+                .map(game -> ResponseEntity.status(HttpStatus.FOUND).body(game))
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
 

@@ -8,6 +8,8 @@ public class Card {
     private String suit;
     private int value;
 
+    public Card() {}
+
     public Card(CardName cardName, CardSuit cardSuit) {
         this.name = cardName.name();
         this.suit = cardSuit.name();

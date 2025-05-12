@@ -13,7 +13,7 @@ import java.util.NoSuchElementException;
 public class Game {
 
     @Id
-    String id;
+    private String id;
     private Player player;
     private Player croupier;
     private Deck deck = new Deck();
@@ -96,11 +96,7 @@ public class Game {
     }
 
     public boolean betIsSet(boolean set) {
-        if (set) {
-            return true;
-        } else {
-            return false;
-        }
+        return set;
     }
 
     public void addBetToTotalBet(int individualBet) {
@@ -143,9 +139,7 @@ public class Game {
     }
 
     public boolean isBust(boolean isBust) {
-        if (isBust) {
-            return true;
-        } else {return false; }
+        return isBust;
     }
 
     public Player getPlayer() {

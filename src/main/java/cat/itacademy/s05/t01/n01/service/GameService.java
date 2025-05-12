@@ -34,11 +34,15 @@ public class GameService {
                     });
         }
 
-    public Mono<Game> getGameById(int id) {
-        if (id==0) {
+    public Mono<Game> getGameById(String id) {
+        if (id.isEmpty() || id.equals("0")) {
             return Mono.error(new IllegalArgumentException("The id is null or invalid"));
         }
         return gameRepo.findById(id).
-                switchIfEmpty(Mono.error(new IllegalArgumentException("There isn't a player with id" + id + "in the DataBase")));
+                switchIfEmpty(Mono.error(new IllegalArgumentException("There isn't a game with id" + id + "in the DataBase")));
     }
+
+
+
+
 }
