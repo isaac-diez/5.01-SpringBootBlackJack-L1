@@ -32,9 +32,11 @@ public class Game {
         this.croupierHand = new Hand(this.croupier);
         this.initialBet = initialBet;
         this.betTotal = new ArrayList<>();
+
     }
 
     public void playGame() {
+
         this.gameInit();
         this.gameMainPart(playerHand);
 
@@ -45,27 +47,25 @@ public class Game {
         this.gameAfterStandDecision();
     }
 
-
     public void gameInit() {
 
         this.setPlayerBet(this.initialBet);
 
-        //Draw cards for player
         this.playerHand.addCardToHand(drawCard(this.deck));
         this.playerHand.addCardToHand(drawCard(this.deck));
 
-        //Draw cards for croupier
         this.croupierHand.addCardToHand(drawCard(this.deck));
         this.croupierHand.addCardToHand(drawCard(this.deck));
 
     }
 
+
     public void gameMainPart(Hand handToPlay) {
+
         if (getPlayerTotalBet() == 0) {
             throw new RuntimeException("Initial bet is not set.");
         }
 
-        // Split solo si se está jugando la mano original (no splitHand)
         if (handToPlay == playerHand &&
                 handToPlay.getHandList().size() == 2 &&
                 handToPlay.getHandList().get(0).getValue() == handToPlay.getHandList().get(1).getValue()) {
@@ -73,26 +73,21 @@ public class Game {
             return;
         }
 
-        // Double down si valor es 9, 10, 11
         if (handToPlay.getHandValue() >= 9 && handToPlay.getHandValue() <= 11) {
             gameAfterDoubleDownDecision();
             return;
         }
 
-        // Hit hasta que llegue a 17 o se pase
         while (handToPlay.getHandValue() < 17 && !handToPlay.isBust()) {
             gameAfterHitDecision(handToPlay);
         }
 
-        // Si se planta, no hacemos nada más aquí
         gameAfterStandDecision();
     }
 
 
-
     public void setPlayerBet(int individualBet) {
         this.addBetToTotalBet(individualBet);
-
     }
 
     public boolean betIsSet(boolean set) {
@@ -101,6 +96,7 @@ public class Game {
 
     public void addBetToTotalBet(int individualBet) {
         betTotal.add(individualBet);
+
     }
 
     public Integer getPlayerTotalBet() {
@@ -110,9 +106,10 @@ public class Game {
             fullBet += amountBet;
         }
         return fullBet;
+
     }
 
-    public Card drawCard(Deck shuffledDeck){
+    public Card drawCard(Deck shuffledDeck) {
 
         Iterator<Card> iteratorShuffledDeck = shuffledDeck.getDeckList().iterator();
 
@@ -122,20 +119,16 @@ public class Game {
         return shuffledDeck.removeCardFromDeck();
     }
 
-    public Hand getPlayerHand(PlayerType playerType) {
-
-        if (playerType == PlayerType.PLAYER) {
+    public Hand getPlayerHand() {
             return this.playerHand;
+    }
 
-        } else {
-            return this.croupierHand;
-        }
+    public Hand getCroupierHand() {
+        return this.croupierHand;
     }
 
     public Hand getPlayerSplitHand() {
-
-            return this.splitHand;
-
+        return this.splitHand;
     }
 
     public boolean isBust(boolean isBust) {
@@ -150,20 +143,23 @@ public class Game {
         this.player = player;
     }
 
+
     public Player getCroupier() {
         return croupier;
     }
+
 
     public Deck getDeck() {
         return deck;
     }
 
     public String handWinner(Hand hand) {
+
         int playerScore = hand.getHandValue();
         int croupierScore = croupierHand.getHandValue();
 
         if (playerScore > 21) {
-            this.player.setGains(initialBet*-1);
+            this.player.setGains(initialBet * -1);
             return croupier.getName();
         }
 
@@ -178,7 +174,7 @@ public class Game {
         }
 
         if (playerScore < croupierScore) {
-            this.player.setGains(initialBet*-1);
+            this.player.setGains(initialBet * -1);
             return croupier.getName();
         }
 
@@ -186,7 +182,7 @@ public class Game {
     }
 
     public void gameAfterStandDecision() {
-        // El croupier roba hasta alcanzar al menos 17 puntos
+
         while (croupierHand.getHandValue() < 17 && !croupierHand.isBust()) {
             croupierHand.addCardToHand(drawCard(this.deck));
         }
@@ -194,11 +190,9 @@ public class Game {
         System.out.println("\n--- RESULTADOS ---");
         System.out.println("Puntuación Croupier: " + croupierHand.getHandValue());
 
-        // Evaluar mano principal del jugador
         System.out.println("Puntuación Jugador (principal): " + playerHand.getHandValue());
         System.out.println("Ganador mano principal: " + handWinner(playerHand));
 
-        // Evaluar mano split si existe
         if (splitHand != null && !splitHand.getHand().isEmpty()) {
             System.out.println("Puntuación Jugador (split): " + splitHand.getHandValue());
             System.out.println("Ganador mano split: " + handWinner(splitHand));
@@ -208,44 +202,32 @@ public class Game {
 
     }
 
-
-
     public void gameAfterHitDecision(Hand handToPlay) {
         handToPlay.addCardToHand(drawCard(this.deck));
     }
 
-
     public void gameAfterDoubleDownDecision() {
-
         this.setPlayerBet(initialBet);
         this.playerHand.addCardToHand(drawCard(this.deck));
-
     }
 
     public void gameAfterSplitDecision() {
-        // Crear mano dividida
         splitHand = new Hand(this.player);
 
-        // Sacar segunda carta de la mano original
         Card secondCard = playerHand.getHandList().get(1);
         playerHand.removeCardFromHand(secondCard);
 
-        // Añadir esa carta a la mano dividida
         splitHand.addCardToHand(secondCard);
 
-        // Añadir una carta a cada mano para completar el split
         playerHand.addCardToHand(drawCard(this.deck));
         splitHand.addCardToHand(drawCard(this.deck));
 
-        // Apostar por la segunda mano
         this.setPlayerBet(initialBet);
 
-        // Jugar ambas manos
         this.gameMainPart(playerHand);
+
         this.gameMainPart(splitHand);
+
     }
-
-
-
 
 }

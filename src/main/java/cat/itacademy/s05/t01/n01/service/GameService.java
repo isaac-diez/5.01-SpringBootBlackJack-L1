@@ -1,12 +1,14 @@
 package cat.itacademy.s05.t01.n01.service;
 
-import cat.itacademy.s05.t01.n01.model.Game;
-import cat.itacademy.s05.t01.n01.model.Player;
-import cat.itacademy.s05.t01.n01.model.PlayerType;
+import cat.itacademy.s05.t01.n01.model.*;
 import cat.itacademy.s05.t01.n01.repository.GameRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 @Service
 public class GameService {
@@ -41,8 +43,6 @@ public class GameService {
         return gameRepo.findById(id).
                 switchIfEmpty(Mono.error(new IllegalArgumentException("There isn't a game with id" + id + "in the DataBase")));
     }
-
-
 
 
 }
