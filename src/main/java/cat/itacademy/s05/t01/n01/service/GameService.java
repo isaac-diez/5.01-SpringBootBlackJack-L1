@@ -1,13 +1,17 @@
 package cat.itacademy.s05.t01.n01.service;
 
+import cat.itacademy.s05.t01.n01.exception.NoGamesInTheDatabaseException;
+import cat.itacademy.s05.t01.n01.exception.NoPlayersInTheDatabaseException;
 import cat.itacademy.s05.t01.n01.model.*;
 import cat.itacademy.s05.t01.n01.repository.GameRepo;
+import cat.itacademy.s05.t01.n01.session.GameSessionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -25,11 +29,11 @@ public class GameService {
     public Mono<Game> createGame(String playerName, int initialBet) {
         return playerService.getPlayerByName(playerName)
                 .switchIfEmpty(Mono.defer(() -> {
-                    Player newPlayer = new Player(playerName, PlayerType.PLAYER);
+                    Player newPlayer = new Player(playerName);
                     return playerService.createPlayer(newPlayer);
                 }))
                 .flatMap(savedPlayer -> {
-                    Game game = new Game(savedPlayer, initialBet);
+                    Game game = new Game(savedPlayer.getId(), initialBet);
                     return gameRepo.save(game)
                         .doOnNext(savedGame -> System.out.println("Game saved: " + savedGame))
                         .doOnError(e -> System.err.println("Error saving game: " + e.getMessage()));
@@ -43,6 +47,36 @@ public class GameService {
         return gameRepo.findById(id).
                 switchIfEmpty(Mono.error(new IllegalArgumentException("There isn't a game with id" + id + "in the DataBase")));
     }
+
+    public Mono<Game> playGame(String gameId) {
+        return gameRepo.findById(gameId)
+                .switchIfEmpty(Mono.error(new IllegalArgumentException("Game not found with ID: " + gameId)))
+                .flatMap(game ->
+                        playerService.getPlayerById(game.getPlayerId())
+                                .flatMap(player -> {
+                                    GameSessionContext context = new GameSessionContext(game, player);
+                                    context.startGame();
+
+                                    return playerService.updatePlayer(player)
+                                            .then(gameRepo.save(game));
+                                })
+                );
+    }
+
+    public Mono<List<Game>> getAllGames() {
+        return gameRepo.findAll().
+                collectList().
+                flatMap(games -> {
+                    if (games.isEmpty()) {
+                        return Mono.error(new NoGamesInTheDatabaseException("The database is empty"));
+                    }
+                    return Mono.just(games);
+                });
+
+    }
+
+
+
 
 
 }

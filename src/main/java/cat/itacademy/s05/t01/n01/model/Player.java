@@ -11,9 +11,14 @@ public class Player {
     private PlayerType type;
     private int gains = 0;
 
-    public Player(String name, PlayerType type) {
+    public Player(String name) {
         this.name = name;
-        this.type = type;
+        this.type = PlayerType.PLAYER;
+    }
+
+    public Player () {
+        this.name = "CROUPIER";
+        this.type = PlayerType.CROUPIER;
     }
 
     public Integer getGains() {
@@ -26,6 +31,10 @@ public class Player {
 
     public Integer getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
