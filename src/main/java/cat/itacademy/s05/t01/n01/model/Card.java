@@ -36,7 +36,4 @@ public class Card {
         return value;
     }
 
-    public boolean isAce() {
-        return this.name.equals("ACE");
-    }
 }

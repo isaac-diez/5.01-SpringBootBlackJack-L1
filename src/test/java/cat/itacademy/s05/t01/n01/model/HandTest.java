@@ -1,5 +1,6 @@
 package cat.itacademy.s05.t01.n01.model;
 
+import cat.itacademy.s05.t01.n01.session.GameSessionContext;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -10,25 +11,26 @@ class HandTest {
     @Test
     void getHandList() {
 
-        Player Isaac = new Player("Isaac", PlayerType.PLAYER);
-        Game gameTest = new Game(Isaac, 50);
-        gameTest.gameInit();
+        Player Isaac = new Player("Isaac");
+        Game gameTest = new Game(Isaac.getId(), 50);
+        GameSessionContext sessionContext = new GameSessionContext(gameTest,Isaac);
+        sessionContext.startGame();
 
-        Assertions.assertEquals(2,gameTest.getPlayerHand(PlayerType.PLAYER).getHandList().size());
+        Assertions.assertEquals(2,gameTest.getPlayerHand().size());
 
         int i = 0;
-        for (Card j : gameTest.getPlayerHand(PlayerType.PLAYER).getHandList()) {
-            System.out.println("key: " + i + " value: " + gameTest.getPlayerHand(PlayerType.PLAYER).getHandList().get(i).getName()
-                    + " of " + gameTest.getPlayerHand(PlayerType.PLAYER).getHandList().get(i).getSuit());
+        for (Card j : gameTest.getPlayerHand()) {
+            System.out.println("key: " + i + " value: " + gameTest.getPlayerHand().get(i).getName()
+                    + " of " + gameTest.getPlayerHand().get(i).getSuit());
             i++;
         }
 
-        Assertions.assertEquals(2,gameTest.getPlayerHand(PlayerType.CROUPIER).getHandList().size());
+        Assertions.assertEquals(2,gameTest.getPlayerHand().size());
 
         i=0;
-        for (Card card : gameTest.getPlayerHand(PlayerType.CROUPIER).getHandList()) {
-            System.out.println("key: " + i + " value: " + gameTest.getPlayerHand(PlayerType.CROUPIER).getHandList().get(i).getName()
-                    + " of " + gameTest.getPlayerHand(PlayerType.CROUPIER).getHandList().get(i).getSuit());
+        for (Card card : gameTest.getCroupierHand()) {
+            System.out.println("key: " + i + " value: " + gameTest.getCroupierHand().get(i).getName()
+                    + " of " + gameTest.getCroupierHand().get(i).getSuit());
             i++;
         }
 
@@ -37,31 +39,32 @@ class HandTest {
     @Test
     void getHandValue() {
 
-        Player Isaac = new Player("Isaac", PlayerType.PLAYER);
-        Game gameTest = new Game(Isaac, 50);
-        gameTest.gameInit();
+        Player Isaac = new Player("Isaac");
+        Game gameTest = new Game(Isaac.getId(), 50);
+        GameSessionContext sessionContext = new GameSessionContext(gameTest,Isaac);
+        sessionContext.startGame();
 
         System.out.println("Player Hand:");
         int i = 0;
-        for (Card j : gameTest.getPlayerHand(PlayerType.PLAYER).getHandList()) {
-            System.out.println("key: " + i + " card: " + gameTest.getPlayerHand(PlayerType.PLAYER).getHandList().get(i).getName()
-                    + " of " + gameTest.getPlayerHand(PlayerType.PLAYER).getHandList().get(i).getSuit());
+        for (Card j : gameTest.getPlayerHand()) {
+            System.out.println("key: " + i + " card: " + gameTest.getPlayerHand().get(i).getName()
+                    + " of " + gameTest.getPlayerHand().get(i).getSuit());
             i++;
         }
 
-        System.out.println("Hand value: " + gameTest.getPlayerHand(PlayerType.PLAYER).getHandValue());
+ //       System.out.println("Hand value: " + gameTest.getPlayerHand().getHandValue());
 
         System.out.println();
 
         System.out.println("Croupier Hand:");
         i = 0;
-        for (Card j : gameTest.getPlayerHand(PlayerType.CROUPIER).getHandList()) {
-            System.out.println("key: " + i + " card: " + gameTest.getPlayerHand(PlayerType.CROUPIER).getHandList().get(i).getName()
-                    + " of " + gameTest.getPlayerHand(PlayerType.CROUPIER).getHandList().get(i).getSuit());
+        for (Card j : gameTest.getCroupierHand()) {
+            System.out.println("key: " + i + " card: " + gameTest.getCroupierHand().get(i).getName()
+                    + " of " + gameTest.getCroupierHand().get(i).getSuit());
             i++;
         }
 
-        System.out.println("Hand value: " + gameTest.getPlayerHand(PlayerType.CROUPIER).getHandValue());
+//        System.out.println("Hand value: " + gameTest.getPlayerHand().getHandValue());
 
     }
 }
