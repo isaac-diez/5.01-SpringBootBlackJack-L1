@@ -10,7 +10,6 @@ public class Deck {
 
     }
 
-
     public List<Card> getDeckList() {
         return this.deck;
     }

@@ -1,7 +1,5 @@
 package cat.itacademy.s05.t01.n01.model;
 
-import java.util.Objects;
-
 public class Card {
 
     private String name;
@@ -16,24 +14,12 @@ public class Card {
         this.value = CardValue.valueOf(name).getValue();
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    public String getName() { return name; }
 
     public String getSuit() {
         return suit;
     }
 
-    public void setSuit(String suit) {
-        this.suit = suit;
-    }
-
-    public int getValue() {
-        return value;
-    }
+    public int getValue() { return value; }
 
 }
