@@ -3,6 +3,7 @@ package cat.itacademy.s05.t01.n01.controller;
 import cat.itacademy.s05.t01.n01.dto.GameRequest;
 import cat.itacademy.s05.t01.n01.exception.GameAlreadyPlayedException;
 import cat.itacademy.s05.t01.n01.exception.GameCreationParamsMissing;
+import cat.itacademy.s05.t01.n01.exception.GameNotFoundInDataBaseExeption;
 import cat.itacademy.s05.t01.n01.exception.NoGamesInTheDatabaseException;
 import cat.itacademy.s05.t01.n01.model.Game;
 import cat.itacademy.s05.t01.n01.model.Player;
@@ -52,9 +53,15 @@ public class GameController {
                         e -> Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).build()));
     }
 
+    @DeleteMapping("/delete/{id}")
+    public Mono<ResponseEntity<Void>> deletePlayer(@PathVariable String id) {
+        return gameService.deleteGame(id).
+                thenReturn(ResponseEntity.noContent().build());
+    }
+
     @ExceptionHandler(GameCreationParamsMissing.class)
     public ResponseEntity<String> handleGameCreationParamsMissing(GameCreationParamsMissing ex) {
-        return ResponseEntity.badRequest().body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
     @ExceptionHandler(GameAlreadyPlayedException.class)
@@ -64,6 +71,11 @@ public class GameController {
 
     @ExceptionHandler(NoGamesInTheDatabaseException.class)
     public ResponseEntity<String> handleNoGamesInDB(NoGamesInTheDatabaseException ex) {
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(GameNotFoundInDataBaseExeption.class)
+    public ResponseEntity<String> handleGameNotFoundInDataBase(GameNotFoundInDataBaseExeption ex) {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(ex.getMessage());
     }
 

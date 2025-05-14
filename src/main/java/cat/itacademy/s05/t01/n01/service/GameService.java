@@ -1,9 +1,6 @@
 package cat.itacademy.s05.t01.n01.service;
 
-import cat.itacademy.s05.t01.n01.exception.GameAlreadyPlayedException;
-import cat.itacademy.s05.t01.n01.exception.GameCreationParamsMissing;
-import cat.itacademy.s05.t01.n01.exception.NoGamesInTheDatabaseException;
-import cat.itacademy.s05.t01.n01.exception.NoPlayersInTheDatabaseException;
+import cat.itacademy.s05.t01.n01.exception.*;
 import cat.itacademy.s05.t01.n01.model.*;
 import cat.itacademy.s05.t01.n01.repository.GameRepo;
 import cat.itacademy.s05.t01.n01.session.GameSessionContext;
@@ -29,7 +26,7 @@ public class GameService {
     }
 
     public Mono<Game> createGame(String playerName, int initialBet) {
-        if (playerName.isEmpty() || initialBet == 0) {
+        if (playerName.isEmpty() || initialBet <= 0) {
             return Mono.error(new GameCreationParamsMissing("The name of the player and/or the bet are null or invalid"));
         }
         return playerService.getPlayerByName(playerName)
@@ -84,6 +81,21 @@ public class GameService {
                     return Mono.just(games);
                 });
 
+    }
+
+    public Mono<Void> deleteGame(String id) {
+        if (id.equals("0")) {
+            return Mono.error(new GameNotFoundInDataBaseExeption("The id is null or invalid"));
+        }
+
+        return gameRepo.existsById(id).
+                flatMap(exists -> {
+                    if (exists) {
+                        return gameRepo.deleteById(id);
+                    } else {
+                        return Mono.error(new GameNotFoundInDataBaseExeption("The player with id " + id + " doesn't exist in the Database"));
+                    }
+                });
     }
 
 
