@@ -91,7 +91,7 @@ import java.util.NoSuchElementException;
             return this.deck;
 
         }
-        private void gameInit() {
+        void gameInit() {
 
             shuffleDeck();
             playerHand.setBet(game.getBet());
@@ -99,13 +99,13 @@ import java.util.NoSuchElementException;
             drawInitialCards(croupierHand);
         }
 
-        private void drawInitialCards(Hand hand) {
+        void drawInitialCards(Hand hand) {
 
             hand.addCardToHand(drawCard());
             hand.addCardToHand(drawCard());
         }
 
-        private Card drawCard() {
+        Card drawCard() {
             Iterator<Card> iterator = deck.getDeckList().iterator();
             if (!iterator.hasNext()) throw new NoSuchElementException("Deck is empty");
             return removeCardFromDeck();
@@ -145,37 +145,37 @@ import java.util.NoSuchElementException;
             return hand.getHandList().size() == 2 && getHandValue(hand) == 21;
         }
 
-        private void playHand(Hand hand) {
+        void playHand(Hand hand) {
             if (hand == playerHand && canSplit(hand)) {
-                this.game.setPlay("Split");
+                this.game.setPlay(PlayerDecision.SPLIT.name());
                 performSplit();
                 return;
             }
 
             if (hand != splitHand && getHandValue(hand) >= 9 && getHandValue(hand) <= 11) {
-                this.game.setPlay("DoubleDown");
+                this.game.setPlay(PlayerDecision.DOUBLEDOWN.name());
                 performDoubleDown(hand);
                 return;
             }
 
             if (hand == playerHand && getHandValue(hand) == 21) {
-                this.game.setPlay("BlackJack");
+                this.game.setPlay(PlayerDecision.BLACKJACK.name());
                 return;
             }
 
             while (getHandValue(hand) < 17 && !isBust(hand)) {
-                this.game.setPlay("Hit");
+                this.game.setPlay(PlayerDecision.HIT.name());
                 hand.addCardToHand(drawCard());
             }
         }
 
 
-        private boolean canSplit(Hand hand) {
+        boolean canSplit(Hand hand) {
             return hand.getHandList().size() == 2 &&
                     hand.getHandList().get(0).getValue() == hand.getHandList().get(1).getValue();
         }
 
-        private void performSplit() {
+        void performSplit() {
             splitHand = new Hand(player);
             splitHand.setBet(game.getBet());
 
@@ -190,11 +190,11 @@ import java.util.NoSuchElementException;
             playHand(splitHand);
         }
 
-        private void performDoubleDown(Hand hand) {
+        void performDoubleDown(Hand hand) {
             game.setBet(game.getBet() * 2);
             hand.addCardToHand(drawCard());
         }
-        private void concludeGame() {
+        void concludeGame() {
             while (getHandValue(croupierHand) < 17 && !isBust(croupierHand)) {
                 croupierHand.addCardToHand(drawCard());
             }
@@ -206,7 +206,7 @@ import java.util.NoSuchElementException;
             }
         }
 
-        private void evaluateWinner(Hand hand) {
+        void evaluateWinner(Hand hand) {
             int playerScore = getHandValue(hand);
             int croupierScore = getHandValue(croupierHand);
             int bet = hand.getBet();
@@ -225,10 +225,10 @@ import java.util.NoSuchElementException;
             }
         }
 
-        private void evaluateLoser(Hand hand) {
+        void evaluateLoser(Hand hand) {
             if (isBust(hand)) {
                 player.setGains(player.getGains() - hand.getBet());
-                game.setWinner("Croupier");
+                game.setWinner("CROUPIER");
             }
         }
 
@@ -244,8 +244,5 @@ import java.util.NoSuchElementException;
             return splitHand;
         }
 
-        public Game getGame() {
-            return game;
-        }
     }
 
