@@ -52,4 +52,9 @@ public class PlayerController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(ex.getMessage());
     }
 
+    @ExceptionHandler(PlayerNotFoundInDataBaseExeption.class)
+    public ResponseEntity<String> handleNoPlayerFoundInDB(PlayerNotFoundInDataBaseExeption ex) {
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(ex.getMessage());
+    }
+
 }

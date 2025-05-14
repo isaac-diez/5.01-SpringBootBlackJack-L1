@@ -2,6 +2,7 @@ package cat.itacademy.s05.t01.n01.controller;
 
 import cat.itacademy.s05.t01.n01.dto.GameRequest;
 import cat.itacademy.s05.t01.n01.exception.GameAlreadyPlayedException;
+import cat.itacademy.s05.t01.n01.exception.GameCreationParamsMissing;
 import cat.itacademy.s05.t01.n01.exception.NoGamesInTheDatabaseException;
 import cat.itacademy.s05.t01.n01.model.Game;
 import cat.itacademy.s05.t01.n01.model.Player;
@@ -51,9 +52,19 @@ public class GameController {
                         e -> Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).build()));
     }
 
+    @ExceptionHandler(GameCreationParamsMissing.class)
+    public ResponseEntity<String> handleGameCreationParamsMissing(GameCreationParamsMissing ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
     @ExceptionHandler(GameAlreadyPlayedException.class)
     public ResponseEntity<String> handleAlreadyPlayed(GameAlreadyPlayedException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(NoGamesInTheDatabaseException.class)
+    public ResponseEntity<String> handleNoGamesInDB(NoGamesInTheDatabaseException ex) {
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(ex.getMessage());
     }
 
 

@@ -1,6 +1,7 @@
 package cat.itacademy.s05.t01.n01.service;
 
 import cat.itacademy.s05.t01.n01.exception.GameAlreadyPlayedException;
+import cat.itacademy.s05.t01.n01.exception.GameCreationParamsMissing;
 import cat.itacademy.s05.t01.n01.exception.NoGamesInTheDatabaseException;
 import cat.itacademy.s05.t01.n01.exception.NoPlayersInTheDatabaseException;
 import cat.itacademy.s05.t01.n01.model.*;
@@ -28,6 +29,9 @@ public class GameService {
     }
 
     public Mono<Game> createGame(String playerName, int initialBet) {
+        if (playerName.isEmpty() || initialBet == 0) {
+            return Mono.error(new GameCreationParamsMissing("The name of the player and/or the bet are null or invalid"));
+        }
         return playerService.getPlayerByName(playerName)
                 .switchIfEmpty(Mono.defer(() -> {
                     Player newPlayer = new Player(playerName);
