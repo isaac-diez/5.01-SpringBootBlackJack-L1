@@ -14,7 +14,7 @@ public class Game {
 
     private int playerId;
     private int bet;
-    private String play;
+    private String play = "Stand";
     private int playerFinalScore;
     private int croupierFinalScore;
     private String winner;

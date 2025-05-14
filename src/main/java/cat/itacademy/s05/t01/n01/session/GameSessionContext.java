@@ -158,6 +158,11 @@ import java.util.NoSuchElementException;
                 return;
             }
 
+            if (hand == playerHand && getHandValue(hand) == 21) {
+                this.game.setPlay("BlackJack");
+                return;
+            }
+
             while (getHandValue(hand) < 17 && !isBust(hand)) {
                 this.game.setPlay("Hit");
                 hand.addCardToHand(drawCard());
@@ -215,6 +220,8 @@ import java.util.NoSuchElementException;
             } else if (playerScore < croupierScore) {
                 player.setGains(-game.getBet());
                 this.game.setWinner(croupier.getName());
+            } else {
+                this.game.setWinner("Draw");
             }
         }
 
