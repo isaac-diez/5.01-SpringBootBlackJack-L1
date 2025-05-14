@@ -1,5 +1,6 @@
 package cat.itacademy.s05.t01.n01.service;
 
+import cat.itacademy.s05.t01.n01.exception.GameAlreadyPlayedException;
 import cat.itacademy.s05.t01.n01.exception.NoGamesInTheDatabaseException;
 import cat.itacademy.s05.t01.n01.exception.NoPlayersInTheDatabaseException;
 import cat.itacademy.s05.t01.n01.model.*;
@@ -53,7 +54,7 @@ public class GameService {
                 .switchIfEmpty(Mono.error(new IllegalArgumentException("Game not found with ID: " + gameId)))
                 .flatMap(game -> {
                     if (game.isFinished()) {
-                        return Mono.error(new IllegalStateException("This game has already been played."));
+                        return Mono.error(new GameAlreadyPlayedException("This game has already been played."));
                     }
 
                     return playerService.getPlayerById(game.getPlayerId())

@@ -1,6 +1,7 @@
 package cat.itacademy.s05.t01.n01.controller;
 
 import cat.itacademy.s05.t01.n01.dto.GameRequest;
+import cat.itacademy.s05.t01.n01.exception.GameAlreadyPlayedException;
 import cat.itacademy.s05.t01.n01.exception.NoGamesInTheDatabaseException;
 import cat.itacademy.s05.t01.n01.model.Game;
 import cat.itacademy.s05.t01.n01.model.Player;
@@ -48,6 +49,11 @@ public class GameController {
                 .map(games -> ResponseEntity.ok().body(games))
                 .onErrorResume(NoGamesInTheDatabaseException.class,
                         e -> Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).build()));
+    }
+
+    @ExceptionHandler(GameAlreadyPlayedException.class)
+    public ResponseEntity<String> handleAlreadyPlayed(GameAlreadyPlayedException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
 
