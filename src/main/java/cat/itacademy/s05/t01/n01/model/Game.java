@@ -14,13 +14,15 @@ public class Game {
 
     private int playerId;
     private int bet;
-    private List<Card> playerHand = new ArrayList<>();
-    private List<Card> croupierHand = new ArrayList<>();
-    private List<Card> splitHand = new ArrayList<>();
+    private String play;
     private int playerFinalScore;
     private int croupierFinalScore;
     private String winner;
     private boolean isFinished = false;
+    private List<Card> playerHand = new ArrayList<>();
+    private List<Card> croupierHand = new ArrayList<>();
+    private List<Card> splitHand = new ArrayList<>();
+
 
     public Game() {}
 
@@ -32,6 +34,10 @@ public class Game {
     public boolean isFinished() { return isFinished; }
 
     public void setFinished(boolean finished) { isFinished = finished; }
+
+    public String getPlay() { return play; }
+
+    public void setPlay(String play) { this.play = play; }
 
     public String getId() {
         return id;

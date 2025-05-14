@@ -147,16 +147,19 @@ import java.util.NoSuchElementException;
 
         private void playHand(Hand hand) {
             if (hand == playerHand && canSplit(hand)) {
+                this.game.setPlay("Split");
                 performSplit();
                 return;
             }
 
             if (hand != splitHand && getHandValue(hand) >= 9 && getHandValue(hand) <= 11) {
+                this.game.setPlay("DoubleDown");
                 performDoubleDown(hand);
                 return;
             }
 
             while (getHandValue(hand) < 17 && !isBust(hand)) {
+                this.game.setPlay("Hit");
                 hand.addCardToHand(drawCard());
             }
         }
