@@ -2,13 +2,16 @@ package cat.itacademy.s05.t01.n01.service;
 
 import cat.itacademy.s05.t01.n01.exception.NoPlayersInTheDatabaseException;
 import cat.itacademy.s05.t01.n01.exception.PlayerNotFoundInDataBaseExeption;
+import cat.itacademy.s05.t01.n01.model.Game;
 import cat.itacademy.s05.t01.n01.model.Player;
 import cat.itacademy.s05.t01.n01.repository.PlayerRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PlayerService {
@@ -37,7 +40,7 @@ public class PlayerService {
             return Mono.error(new IllegalArgumentException("The id is null or invalid"));
         }
         return playerRepo.findById(id).
-                switchIfEmpty(Mono.error(new IllegalArgumentException("There isn't a player with id" + id + "in the DataBase")));
+                switchIfEmpty(Mono.error(new IllegalArgumentException("There isn't a player with id " + id + " in the DataBase")));
     }
 
     public Mono<Player> getPlayerByName(String name) {
@@ -76,6 +79,13 @@ public class PlayerService {
                         return Mono.error(new PlayerNotFoundInDataBaseExeption("The player with id " + id + " doesn't exist in the Database"));
                     }
                 });
+    }
+
+    public Mono<List<Player>> getPlayersGainRanking() {
+        return playerRepo.findAll()
+                .collectList()
+                .map(players -> players.stream()
+                        .sorted(Comparator.comparing(Player::getGains).reversed()).collect(Collectors.toList()));
     }
 
 
