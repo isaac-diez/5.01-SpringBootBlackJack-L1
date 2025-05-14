@@ -51,16 +51,22 @@ public class GameService {
     public Mono<Game> playGame(String gameId) {
         return gameRepo.findById(gameId)
                 .switchIfEmpty(Mono.error(new IllegalArgumentException("Game not found with ID: " + gameId)))
-                .flatMap(game ->
-                        playerService.getPlayerById(game.getPlayerId())
-                                .flatMap(player -> {
-                                    GameSessionContext context = new GameSessionContext(game, player);
-                                    context.startGame();
+                .flatMap(game -> {
+                    if (game.isFinished()) {
+                        return Mono.error(new IllegalStateException("This game has already been played."));
+                    }
 
-                                    return playerService.updatePlayer(player)
-                                            .then(gameRepo.save(game));
-                                })
-                );
+                    return playerService.getPlayerById(game.getPlayerId())
+                            .flatMap(player -> {
+                                GameSessionContext context = new GameSessionContext(game, player);
+                                context.startGame();
+
+                                game.setFinished(true);
+
+                                return playerService.updatePlayer(player)
+                                        .then(gameRepo.save(game));
+                            });
+                });
     }
 
     public Mono<List<Game>> getAllGames() {

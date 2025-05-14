@@ -26,25 +26,25 @@ import java.util.NoSuchElementException;
         }
 
         public void startGame() {
-            gameInit();
-            playHand(playerHand);
+                gameInit();
+                playHand(playerHand);
 
-            if (splitHand != null) {
-                playHand(splitHand);
-            }
+                if (splitHand != null) {
+                    playHand(splitHand);
+                }
 
-            boolean playerBust = isBust(playerHand);
-            boolean splitBust = splitHand != null && isBust(splitHand);
+                boolean playerBust = isBust(playerHand);
+                boolean splitBust = splitHand != null && isBust(splitHand);
 
-            boolean allBust = playerBust && (splitHand == null || splitBust);
+                boolean allBust = playerBust && (splitHand == null || splitBust);
 
-            if (allBust) {
-                evaluateLoser(playerHand);
-                if (splitHand != null) evaluateLoser(splitHand);
-            } else {
-                concludeGame();
-            }
-            afterGame();
+                if (allBust) {
+                    evaluateLoser(playerHand);
+                    if (splitHand != null) evaluateLoser(splitHand);
+                } else {
+                    concludeGame();
+                }
+                afterGame();
         }
 
         public void afterGame() {

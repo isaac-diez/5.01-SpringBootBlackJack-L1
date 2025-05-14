@@ -16,12 +16,12 @@ public class Game {
     private int bet;
     private List<Card> playerHand = new ArrayList<>();
     private List<Card> croupierHand = new ArrayList<>();
-    private List<Card> splitHand = new ArrayList<>(); // puede ser null
+    private List<Card> splitHand = new ArrayList<>();
     private int playerFinalScore;
     private int croupierFinalScore;
-    private String winner; // Nombre del ganador o "Draw"
+    private String winner;
+    private boolean isFinished = false;
 
-    // Constructor vacío necesario para MongoDB
     public Game() {}
 
     public Game(int playerId, int initialBet) {
@@ -29,14 +29,15 @@ public class Game {
         this.bet = initialBet;
     }
 
-    // Getters y setters
+    public boolean isFinished() { return isFinished; }
+
+    public void setFinished(boolean finished) { isFinished = finished; }
+
     public String getId() {
         return id;
     }
 
-    public int getPlayerId() {
-        return playerId;
-    }
+    public int getPlayerId() { return playerId; }
 
     public void setPlayerId(int playerId) {
         this.playerId = playerId;
