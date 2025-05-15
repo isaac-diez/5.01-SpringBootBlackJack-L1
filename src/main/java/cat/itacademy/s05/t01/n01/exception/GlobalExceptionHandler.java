@@ -1,66 +1,66 @@
 package cat.itacademy.s05.t01.n01.exception;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.core.annotation.Order;
+import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.WebRequest;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
+import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebExceptionHandler;
+import reactor.core.publisher.Mono;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-@ControllerAdvice
-public class GlobalExceptionHandler {
+@Component
+@Order(-2)
+public class GlobalExceptionHandler implements WebExceptionHandler {
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Object> handleIllegalArgument(IllegalArgumentException ex, WebRequest request) {
-        return buildErrorResponse(ex, HttpStatus.BAD_REQUEST, request);
-    }
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleAll(Exception ex, WebRequest request) {
-        return buildErrorResponse(ex, HttpStatus.INTERNAL_SERVER_ERROR, request);
-    }
+    @Override
+    public Mono<Void> handle(ServerWebExchange exchange, Throwable ex) {
+        HttpStatus status = resolveHttpStatus(ex);
 
-    @ExceptionHandler(NoPlayersInTheDatabaseException.class)
-    public ResponseEntity<Object> handleNoPlayersInDB(NoPlayersInTheDatabaseException ex, WebRequest request) {
-        return buildErrorResponse(ex, HttpStatus.NO_CONTENT, request);
-    }
+        exchange.getResponse().setStatusCode(status);
+        exchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
-    @ExceptionHandler(PlayerNotFoundInDataBaseExeption.class)
-    public ResponseEntity<Object> handleNoPlayerFoundInDB(PlayerNotFoundInDataBaseExeption ex, WebRequest request) {
-        return buildErrorResponse(ex, HttpStatus.NO_CONTENT, request);
-    }
-
-    @ExceptionHandler(GameCreationParamsMissing.class)
-    public ResponseEntity<Object> handleGameCreationParamsMissing(GameCreationParamsMissing ex, WebRequest request) {
-        return buildErrorResponse(ex, HttpStatus.BAD_REQUEST, request);
-    }
-
-    @ExceptionHandler(GameAlreadyPlayedException.class)
-    public ResponseEntity<Object> handleAlreadyPlayed(GameAlreadyPlayedException ex, WebRequest request) {
-        return buildErrorResponse(ex, HttpStatus.CONFLICT, request);
-    }
-
-    @ExceptionHandler(NoGamesInTheDatabaseException.class)
-    public ResponseEntity<Object> handleNoGamesInDB(NoGamesInTheDatabaseException ex, WebRequest request) {
-        return buildErrorResponse(ex, HttpStatus.NO_CONTENT, request);
-    }
-
-    @ExceptionHandler(GameNotFoundInDataBaseExeption.class)
-    public ResponseEntity<Object> handleGameNotFoundInDataBase(GameNotFoundInDataBaseExeption ex, WebRequest request) {
-        return buildErrorResponse(ex, HttpStatus.NO_CONTENT, request);
-    }
-
-    private ResponseEntity<Object> buildErrorResponse(Exception ex, HttpStatus status, WebRequest request) {
         Map<String, Object> body = new HashMap<>();
-        body.put("timestamp", LocalDateTime.now());
+        body.put("timestamp", LocalDateTime.now().toString());
         body.put("status", status.value());
         body.put("error", status.getReasonPhrase());
         body.put("message", ex.getMessage());
-        body.put("path", request.getDescription(false).replace("uri=", ""));
+        body.put("path", exchange.getRequest().getPath().value());
 
-        return new ResponseEntity<>(body, status);
+        try {
+            byte[] bytes = objectMapper.writeValueAsBytes(body);
+            DataBuffer buffer = exchange.getResponse().bufferFactory().wrap(bytes);
+            return exchange.getResponse().writeWith(Mono.just(buffer));
+        } catch (Exception e) {
+            return exchange.getResponse().setComplete();
+        }
+    }
+
+    private HttpStatus resolveHttpStatus(Throwable ex) {
+        if (ex instanceof IllegalArgumentException) {
+            return HttpStatus.BAD_REQUEST;
+        } else if (ex instanceof NoPlayersInTheDatabaseException) {
+            return HttpStatus.NO_CONTENT;
+        } else if (ex instanceof PlayerNotFoundInDataBaseExeption) {
+            return HttpStatus.BAD_REQUEST;
+        } else if (ex instanceof GameCreationParamsMissing) {
+            return HttpStatus.BAD_REQUEST;
+        } else if (ex instanceof GameAlreadyPlayedException) {
+            return HttpStatus.CONFLICT;
+        } else if (ex instanceof NoGamesInTheDatabaseException) {
+            return HttpStatus.NO_CONTENT;
+        } else if (ex instanceof GameNotFoundInDataBaseExeption) {
+            return HttpStatus.NO_CONTENT;
+        } else {
+            return HttpStatus.INTERNAL_SERVER_ERROR;
+        }
     }
 }
-
