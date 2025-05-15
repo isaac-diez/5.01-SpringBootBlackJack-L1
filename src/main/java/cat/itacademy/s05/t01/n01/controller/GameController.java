@@ -1,19 +1,13 @@
 package cat.itacademy.s05.t01.n01.controller;
 
 import cat.itacademy.s05.t01.n01.dto.GameRequest;
-import cat.itacademy.s05.t01.n01.exception.GameAlreadyPlayedException;
-import cat.itacademy.s05.t01.n01.exception.GameCreationParamsMissing;
-import cat.itacademy.s05.t01.n01.exception.GameNotFoundInDataBaseExeption;
 import cat.itacademy.s05.t01.n01.exception.NoGamesInTheDatabaseException;
 import cat.itacademy.s05.t01.n01.model.Game;
-import cat.itacademy.s05.t01.n01.model.Player;
-import cat.itacademy.s05.t01.n01.repository.GameRepo;
 import cat.itacademy.s05.t01.n01.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -58,27 +52,5 @@ public class GameController {
         return gameService.deleteGame(id).
                 thenReturn(ResponseEntity.noContent().build());
     }
-
-    @ExceptionHandler(GameCreationParamsMissing.class)
-    public ResponseEntity<String> handleGameCreationParamsMissing(GameCreationParamsMissing ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-    }
-
-    @ExceptionHandler(GameAlreadyPlayedException.class)
-    public ResponseEntity<String> handleAlreadyPlayed(GameAlreadyPlayedException ex) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
-    }
-
-    @ExceptionHandler(NoGamesInTheDatabaseException.class)
-    public ResponseEntity<String> handleNoGamesInDB(NoGamesInTheDatabaseException ex) {
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(ex.getMessage());
-    }
-
-    @ExceptionHandler(GameNotFoundInDataBaseExeption.class)
-    public ResponseEntity<String> handleGameNotFoundInDataBase(GameNotFoundInDataBaseExeption ex) {
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(ex.getMessage());
-    }
-
-
 
 }

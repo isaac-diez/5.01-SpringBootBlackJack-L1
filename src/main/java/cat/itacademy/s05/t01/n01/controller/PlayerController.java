@@ -1,14 +1,8 @@
 package cat.itacademy.s05.t01.n01.controller;
 
-import cat.itacademy.s05.t01.n01.exception.GameAlreadyPlayedException;
-import cat.itacademy.s05.t01.n01.exception.NoPlayersInTheDatabaseException;
-import cat.itacademy.s05.t01.n01.exception.PlayerNotFoundInDataBaseExeption;
 import cat.itacademy.s05.t01.n01.model.Player;
-import cat.itacademy.s05.t01.n01.repository.PlayerRepo;
 import cat.itacademy.s05.t01.n01.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -47,14 +41,6 @@ public class PlayerController {
         return playerService.deletePlayer(id);
     }
 
-    @ExceptionHandler(NoPlayersInTheDatabaseException.class)
-    public ResponseEntity<String> handleNoPlayersInDB(NoPlayersInTheDatabaseException ex) {
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(ex.getMessage());
-    }
 
-    @ExceptionHandler(PlayerNotFoundInDataBaseExeption.class)
-    public ResponseEntity<String> handleNoPlayerFoundInDB(PlayerNotFoundInDataBaseExeption ex) {
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(ex.getMessage());
-    }
 
 }
