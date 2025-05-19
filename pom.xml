@@ -12,10 +12,10 @@
 	</parent>
 
 	<groupId>com.example</groupId>
-	<artifactId>webflux-swagger-demo</artifactId>
+	<artifactId>S05T01N01A-BlackJack</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>webflux-swagger-demo</name>
-	<description>Demo project with WebFlux and Swagger</description>
+	<name>S05T01N01A-BlackJack</name>
+	<description>Reactive app development with MySQL, MongoDB, WebFlux and Swagger</description>
 
 	<properties>
 		<java.version>17</java.version>
