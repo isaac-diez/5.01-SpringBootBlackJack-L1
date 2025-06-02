@@ -72,14 +72,16 @@ public class GameService {
     }
 
     public Mono<List<Game>> getAllGames() {
-        return gameRepo.findAll().
-                collectList().
-                flatMap(games -> {
-                    if (games.isEmpty()) {
-                        return Mono.error(new NoGamesInTheDatabaseException("The database is empty"));
-                    }
-                    return Mono.just(games);
-                });
+        return gameRepo.findAll()
+//                collectList().
+//                flatMap(games -> {
+//                    if (games.isEmpty()) {
+//                        return Mono.error(new NoGamesInTheDatabaseException("The database is empty"));
+//                    }
+//                    return Mono.just(games);
+//                });
+                .collectList()
+                .defaultIfEmpty(new ArrayList<>());
 
     }
 
