@@ -1,5 +1,6 @@
 package cat.itacademy.s05.t01.n01.exception;
 
+import cat.itacademy.s05.t01.n01.dto.ErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.buffer.DataBuffer;
@@ -28,37 +29,40 @@ public class GlobalExceptionHandler implements WebExceptionHandler {
         exchange.getResponse().setStatusCode(status);
         exchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
-        Map<String, Object> body = new HashMap<>();
-        body.put("timestamp", LocalDateTime.now().toString());
-        body.put("status", status.value());
-        body.put("error", status.getReasonPhrase());
-        body.put("message", ex.getMessage());
-        body.put("path", exchange.getRequest().getPath().value());
+        ErrorResponse errorResponse = new ErrorResponse(
+                status.value(),
+                status.getReasonPhrase(),
+                ex.getMessage(),
+                exchange.getRequest().getPath().value()
+        );
 
         try {
-            byte[] bytes = objectMapper.writeValueAsBytes(body);
+            byte[] bytes = objectMapper.writeValueAsBytes(errorResponse);
             DataBuffer buffer = exchange.getResponse().bufferFactory().wrap(bytes);
             return exchange.getResponse().writeWith(Mono.just(buffer));
         } catch (Exception e) {
+
+            System.err.println("Error serializing error response: " + e.getMessage());
             return exchange.getResponse().setComplete();
         }
     }
+
 
     private HttpStatus resolveHttpStatus(Throwable ex) {
         if (ex instanceof IllegalArgumentException) {
             return HttpStatus.BAD_REQUEST;
         } else if (ex instanceof NoPlayersInTheDatabaseException) {
-            return HttpStatus.NO_CONTENT;
+            return HttpStatus.NOT_FOUND;
         } else if (ex instanceof PlayerNotFoundInDataBaseExeption) {
-            return HttpStatus.BAD_REQUEST;
+            return HttpStatus.NOT_FOUND;
         } else if (ex instanceof GameCreationParamsMissing) {
             return HttpStatus.BAD_REQUEST;
         } else if (ex instanceof GameAlreadyPlayedException) {
             return HttpStatus.CONFLICT;
         } else if (ex instanceof NoGamesInTheDatabaseException) {
-            return HttpStatus.NO_CONTENT;
+            return HttpStatus.NOT_FOUND;
         } else if (ex instanceof GameNotFoundInDataBaseExeption) {
-            return HttpStatus.NO_CONTENT;
+            return HttpStatus.NOT_FOUND;
         } else {
             return HttpStatus.INTERNAL_SERVER_ERROR;
         }
